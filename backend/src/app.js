@@ -1,24 +1,54 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import uploadRoutes from './routes/uploadRoutes.js';
-import reportRoutes from './routes/reportRoutes.js';
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import uploadRoutes from "./routes/uploadRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 
-app.use(cors({
-  origin: ["http://localhost:5173", "https://creditsea-assignment-rajesh.vercel.app"],
-  methods: ["GET", "POST"]
-}));
+// ✅ Dynamic CORS setup
+const allowedOrigins = [
+  "http://localhost:5173", // local frontend
+  "https://credit-sea-assignment-rajesh.vercel.app", // deployed Vercel frontend
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like Postman or server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS ❌"));
+      }
+    },
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
+// Middleware
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
-// Routes
-app.use('/api/upload', uploadRoutes);
-app.use('/api/reports', reportRoutes);
+// ✅ Routes
+app.use("/api/upload", uploadRoutes);
+app.use("/api/reports", reportRoutes);
 
-app.get('/', (req, res) => {
-  res.send('🚀 Backend Working Fine!');
+// ✅ Health check route
+app.get("/", (req, res) => {
+  res.status(200).send("🚀 Backend Working Fine!");
+});
+
+// ✅ Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("❌ Server Error:", err.message);
+  if (err.message.includes("CORS")) {
+    res.status(403).json({ error: "CORS Policy Blocked This Request" });
+  } else {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 export default app;

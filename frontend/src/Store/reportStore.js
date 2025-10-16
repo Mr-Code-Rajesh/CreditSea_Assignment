@@ -9,7 +9,7 @@ const useReportStore = create((set) => ({
   fetchReports: async () => {
     try {
       set({ loading: true });
-      const res = await axios.get('http://localhost:5000/api/reports');
+      const res = await axios.get('https://creditsea-assignment-r1z0.onrender.com/api/reports');
       set({ reports: res.data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
@@ -20,9 +20,9 @@ const useReportStore = create((set) => ({
     try {
       const formData = new FormData();
       formData.append('file', file);
-      await axios.post('http://localhost:5000/api/upload', formData);
+      await axios.post('https://creditsea-assignment-r1z0.onrender.com/api/upload', formData);
       // refresh data
-      const res = await axios.get('http://localhost:5000/api/reports');
+      const res = await axios.get('https://creditsea-assignment-r1z0.onrender.com/api/reports');
       set({ reports: res.data });
     } catch (err) {
       console.error(err);

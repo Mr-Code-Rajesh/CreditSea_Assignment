@@ -6,7 +6,10 @@ import reportRoutes from './routes/reportRoutes.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "https://creditsea-assignment-rajesh.vercel.app"],
+  methods: ["GET", "POST"]
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 

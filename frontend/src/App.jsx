@@ -1,20 +1,32 @@
-import React from 'react';
-import UploadForm from './components/UploadForm';
-import ReportList from './components/ReportList';
+// src/App.jsx
+import React, { useState } from 'react';
+import Navbar from './Components/Navbar';
+import ReportList from './Components/ReportList';
 import { motion } from 'framer-motion';
+import UploadForm from './Components/UploadForm'
 
-const App = () => {
+function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold text-center text-blue-700 pt-8">
-       <motion.span initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }}>
-        CreditSea - Credit Report Dashboard
-       </motion.span>
-      </h1>
-      <UploadForm />
-      <ReportList />
+      {/* Navbar stays on top */}
+      <Navbar onSearch={(query) => setSearchQuery(query)} />
+
+      {/* Animated route container (optional) */}
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="pt-4"
+      >
+        
+        <UploadForm />
+        {/* Pass searchQuery to ReportList */}
+        <ReportList searchQuery={searchQuery} />
+      </motion.main>
     </div>
   );
-};
+}
 
 export default App;

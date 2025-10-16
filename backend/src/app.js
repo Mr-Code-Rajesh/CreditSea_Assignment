@@ -6,16 +6,16 @@ import reportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 
-// ✅ Dynamic CORS setup
+// Dynamic CORS setup
 const allowedOrigins = [
-  "http://localhost:5173", // local frontend
-  "https://credit-sea-assignment-rajesh.vercel.app", // deployed Vercel frontend
+  "http://localhost:5173", 
+  "https://credit-sea-assignment-rajesh.vercel.app", 
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like Postman or server-to-server)
+
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
@@ -32,16 +32,16 @@ app.use(
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ✅ Routes
+//  Routes
 app.use("/api/upload", uploadRoutes);
 app.use("/api/reports", reportRoutes);
 
-// ✅ Health check route
+//  Health check route
 app.get("/", (req, res) => {
   res.status(200).send("🚀 Backend Working Fine!");
 });
 
-// ✅ Error handling middleware
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error("❌ Server Error:", err.message);
   if (err.message.includes("CORS")) {
